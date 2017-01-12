@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>Persepolis Download Manager</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.3 Beta</string>
+	<string>2.3.1</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>LSBackgroundOnly</key>
@@ -17,7 +17,7 @@
 	<key>CFBundleName</key>
 	<string>Persepolis Download Manager</string>
 	<key>CFBundleDisplayName</key>
-	<string>Persepolis Download Manager 2.3</string>
+	<string>Persepolis Download Manager 2.3.1</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>NSHighResolutionCapable</key>

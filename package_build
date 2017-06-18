@@ -5,7 +5,9 @@ rm -rf persepolis
 rm -rf dist
 rm -rf build
 git clone "https://github.com/persepolisdm/persepolis.git" persepolis
-python3 pyinstaller/pyinstaller.py persepolis/files/Persepolis\ Download\ Manager -w -i icon.icns
+find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.scripts/scripts/g' '{}' \;
+find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.gui/gui/g' '{}' \;
+python3 pyinstaller/pyinstaller.py 'persepolis/persepolis/__main__.py' -w -i icon.icns -p persepolis/persepolis -n 'Persepolis Download Manager'
 cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/'
 cp Info.plist 'dist/Persepolis Download Manager.app/Contents/'
 mv 'dist/Persepolis Download Manager.app' .

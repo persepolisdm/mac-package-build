@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Copyright (c) 2014-2016, PyInstaller Development Team.
+# Copyright (c) 2014-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -16,6 +16,7 @@ hiddenimports = ["sip",
                  "PyQt5.QtGui",
                  "PyQt5.QtNetwork",
                  "PyQt5.QtWebChannel",
+                 "PyQt5.QtWebEngineCore",
                  ]
 
 # Find the additional files necessary for QtWebEngine.

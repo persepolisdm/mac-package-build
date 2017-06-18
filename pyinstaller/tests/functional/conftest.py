@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Copyright (c) 2005-2016, PyInstaller Development Team.
+# Copyright (c) 2005-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -133,6 +133,7 @@ class AppBuilder(object):
         """
         Test a Python script that is referenced in the supplied .spec file.
         """
+        __tracebackhide__ = True
         specfile = os.path.join(_SPEC_DIR, specfile)
         # 'test_script' should handle .spec properly as script.
         return self.test_script(specfile, *args, **kwargs)
@@ -159,9 +160,10 @@ class AppBuilder(object):
         All other arguments are passed streigth on to `test_script`.
 
         Ensure that the caller of `test_source` is in a UTF-8
-        encoded file with the correct "# -*- coding: utf-8 -*-" marker.
+        encoded file with the correct '# -*- coding: utf-8 -*-' marker.
 
         """
+        __tracebackhide__ = True
         if is_py2:
             if isinstance(source, str):
                 source = source.decode('UTF-8')
@@ -195,6 +197,14 @@ class AppBuilder(object):
         :param runtime: Time in seconds how long to keep executable running.
         :param toc_log: List of modules that are expected to be bundled with the executable.
         """
+        __tracebackhide__ = True
+
+        def marker(line):
+            # Print some marker to stdout and stderr to make it easier
+            # to distinguish the phases in the CI test output.
+            print('-------', line, '-------')
+            print('-------', line, '-------', file=sys.stderr)
+
         if pyi_args is None:
             pyi_args = []
         if app_args is None:
@@ -212,9 +222,12 @@ class AppBuilder(object):
         self.script = script
         assert os.path.exists(self.script), 'Script %s not found.' % script
 
+        marker('Starting build.')
         assert self._test_building(args=pyi_args), 'Building of %s failed.' % script
+        marker('Build finshed, now running executable.')
         self._test_executables(app_name, args=app_args,
                                runtime=runtime, run_from_path=run_from_path)
+        marker('Running executable finished.')
 
     def _test_executables(self, name, args, runtime, run_from_path):
         """
@@ -228,6 +241,7 @@ class AppBuilder(object):
 
         :return: Exit code of the executable.
         """
+        __tracebackhide__ = True
         # TODO implement runtime - kill the app (Ctrl+C) when time times out
         exes = self._find_executables(name)
         # Empty list means that PyInstaller probably failed to create any executable.
@@ -427,6 +441,11 @@ class AppBuilder(object):
 # for every executable.
 @pytest.fixture(scope='session')
 def pyi_modgraph():
+    # Explicitly set the log level since the plugin `pytest-catchlog` (un-)
+    # sets the root logger's level to NOTSET for the setup phase, which will
+    # lead to TRACE messages been written out.
+    import PyInstaller.log as logging
+    logging.logger.setLevel(logging.DEBUG)
     return initialize_modgraph()
 
 

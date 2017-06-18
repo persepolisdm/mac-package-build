@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Copyright (c) 2015-2016, PyInstaller Development Team.
+# Copyright (c) 2015-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -16,8 +16,16 @@
 #
 # https://botocore.readthedocs.org/en/latest/
 #
-# Tested with botocore 1.3.0
+# Tested with botocore 1.4.36
 
 from PyInstaller.utils.hooks import collect_data_files
+from PyInstaller.compat import is_py2
+from PyInstaller.utils.hooks import is_module_satisfies
+
+if is_module_satisfies('botocore >= 1.4.36'):
+    if is_py2:
+        hiddenimports = ['HTMLParser']
+    else:
+        hiddenimports = ['html.parser']
 
 datas = collect_data_files('botocore')

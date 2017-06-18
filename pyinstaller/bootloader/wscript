@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -----------------------------------------------------------------------------
-# Copyright (c) 2014-2016, PyInstaller Development Team.
+# Copyright (c) 2014-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -123,24 +123,31 @@ def options(ctx):
                    default=None,
                    dest='target_cpu')
 
-    if is_linux:
-        ctx.add_option('--no-lsb',
-                       action='store_true',
-                       help='Prevent building LSB (Linux Standard Base) bootloader.',
-                       default=False,
-                       dest='nolsb')
-        ctx.add_option('--lsbcc-path',
-                       action='store',
-                       help='Path where to look for lsbcc. By default PATH is '
-                            'searched for lsbcc otherwise is tried file '
-                            '/opt/lsb/bin/lsbcc. [Default: lsbcc]',
-                       default=None,
-                       dest='lsbcc_path')
-        ctx.add_option('--lsb-target-version',
-                       action='store',
-                       help='Specify LSB target version [Default: 4.0]',
-                       default='4.0',
-                       dest='lsb_version')
+    grp = ctx.add_option_group('Linux Standard Base (LSB) compliance',
+                               'These options have effect only on Linux.')
+    grp.add_option('--no-lsb',
+                   action='store_true',
+                   help=('Build "normal" (non-LSB-compliant) bootloader.'
+                         '(this is the default).'),
+                   default=True,
+                   dest='nolsb')
+    grp.add_option('--lsb',
+                   action='store_false',
+                   help='Build LSB compliant bootloader.',
+                   default=True,
+                   dest='nolsb')
+    grp.add_option('--lsbcc-path',
+                   action='store',
+                   help='Path where to look for lsbcc. By default PATH is '
+                        'searched for lsbcc otherwise is tried file '
+                        '/opt/lsb/bin/lsbcc. [Default: lsbcc]',
+                   default=None,
+                   dest='lsbcc_path')
+    grp.add_option('--lsb-target-version',
+                   action='store',
+                   help='Specify LSB target version [Default: 4.0]',
+                   default='4.0',
+                   dest='lsb_version')
 
 
 @conf

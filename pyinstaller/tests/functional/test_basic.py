@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------
-# Copyright (c) 2005-2016, PyInstaller Development Team.
+# Copyright (c) 2005-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -20,7 +20,7 @@ import pytest
 
 # Local imports
 # -------------
-from PyInstaller.compat import is_darwin, is_win, is_py2
+from PyInstaller.compat import is_darwin, is_win, is_py2, is_py3, is_py34
 from PyInstaller.utils.tests import importorskip, skipif_win, \
     skipif_winorosx, skipif_notwin, skipif_notosx, skipif_no_compiler, xfail
 
@@ -422,23 +422,33 @@ def test_xmldom_module(pyi_builder):
         """)
 
 
+@xfail(is_py3 and not is_py34, reason='Known issue for Python 3.3, see #2377')
 def test_threading_module(pyi_builder):
     pyi_builder.test_source(
         """
+        from __future__ import print_function
         import threading
+        import sys
+
+        print('See stderr for messages')
+        def print_(*args): print(*args, file=sys.stderr)
 
         def doit(nm):
-            print(('%s started' % nm))
+            print_(nm, 'started')
             import pyi_testmod_threading
-            print(('%s %s' % (nm, pyi_testmod_threading.x)))
+            try:
+                print_(nm, pyi_testmod_threading.x)
+            finally:
+                print_(nm, pyi_testmod_threading)
 
         t1 = threading.Thread(target=doit, args=('t1',))
         t2 = threading.Thread(target=doit, args=('t2',))
         t1.start()
         t2.start()
         doit('main')
-        t1.join()
-        t2.join()
+        t1.join() ; print_('t1 joined')
+        t2.join() ; print_('t2 joined')
+        print_('finished.')
         """)
 
 

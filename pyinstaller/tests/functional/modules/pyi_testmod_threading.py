@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Copyright (c) 2005-2016, PyInstaller Development Team.
+# Copyright (c) 2005-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -9,5 +9,8 @@
 
 
 import time
+# add a short delay to trigger concurrency problems,
+# see issue #2371.
+time.sleep(1)
 
 x = 5

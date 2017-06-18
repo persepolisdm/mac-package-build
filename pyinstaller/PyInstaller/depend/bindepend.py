@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Copyright (c) 2013-2016, PyInstaller Development Team.
+# Copyright (c) 2013-2017, PyInstaller Development Team.
 #
 # Distributed under the terms of the GNU General Public License with exception
 # for distributing bootloader.
@@ -662,6 +662,10 @@ def _getImports_macholib(pth):
                 if '.framework' in pth:
                     run_paths.update(['../../../'])
 
+    # for distributions like Anaconda, all of the dylibs are stored in the lib directory
+    # of the Python distribution, not alongside of the .so's in each module's subdirectory.
+    run_paths.add(os.path.join(base_prefix, 'lib'))
+
     ## Try to find files in file system.
 
     # In cases with @loader_path or @executable_path
@@ -669,6 +673,7 @@ def _getImports_macholib(pth):
     # This seems to work in most cases.
     exec_path = os.path.abspath(os.path.dirname(pth))
 
+ 
     for lib in seen:
 
         # Suppose that @rpath is not used for system libraries and
@@ -723,7 +728,8 @@ def getImports(pth):
             # dependencies should already have been handled by
             # selectAssemblies in that case, so just warn, return an empty
             # list and continue.
-            logger.warn('Can not get binary dependencies for file: %s', pth, exc_info=1)
+            logger.warning('Can not get binary dependencies for file: %s', pth,
+                           exc_info=1)
             return []
     elif is_darwin:
         return _getImports_macholib(pth)
@@ -890,12 +896,14 @@ def get_python_library_path():
         # and exec_prefix. That's why we can use just sys.prefix.
         # In virtualenv PyInstaller is not able to find Python library.
         # We need special care for this case.
-        py_prefix = compat.base_prefix
-
-        for name in PYDYLIB_NAMES:
-            full_path = os.path.join(py_prefix, name)
-            if os.path.exists(full_path):
-                return full_path
+        # Anaconda places the python library in the lib directory, so
+        # we search this one as well.
+        prefixes = [compat.base_prefix, os.path.join(compat.base_prefix, 'lib')]
+        for prefix in prefixes:
+            for name in PYDYLIB_NAMES:
+                full_path = os.path.join(prefix, name)
+                if os.path.exists(full_path):
+                    return full_path
 
     # Python library NOT found. Return just None.
     return None

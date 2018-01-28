@@ -3,7 +3,7 @@ mac package build codes for Persepolis Download Manager
 + you should have Persepolis Download Manager dependecies installed at first! It is recommended to use brew to install dependecies. 
 At first place, you need to have latest xCode installed! then install `git` , `python3`, `pyqt5` and `qt5`from brew. 
 
-+ After that, we need some python libraries, so install `pyobjc` and `requests` using `pip3`. Finally, your system is ready to build `.app` bundle for Persepolis Download Manager.
++ After that, we need some python libraries, so install `pyobjc` , `youtube-dl` , `psutil` and `requests` using `pip3`. Finally, your system is ready to build `.app` bundle for Persepolis Download Manager.
 
 + clone or download this repository . Open termianl and change directory to cloned folder.
 

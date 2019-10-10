@@ -33,6 +33,53 @@ clean_build_files () {
     fi
 }
 
+download_aria() {
+    warn_msg "Do you want download latest version of aria2? [y/Y]"
+    read ans
+    if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+        aria_path='temp_aria_dic'
+        mkdir $aria_path \
+        && wget \
+            $(wget -qO - https://api.github.com/repos/aria2/aria2/releases/latest \
+            | egrep '\"browser_download_url\".*osx-darwin\.tar\.bz2\"' \
+            | cut -d'"' -f 4) -O - \
+            | tar -xj -C $aria_path --strip-components 1 \
+        && [ -f ./$aria_path/bin/aria2c ] \
+        && cp ./$aria_path/bin/aria2c $packaging_path/ \
+        && rm -rf $aria_path
+        if [[ $? -ne 0 ]]; then
+            error_msg 'downloading latest aria2 version is failed...using local binary'
+        else
+            success_msg 'latest version of aria2 downloaded and replace with local binary'
+        fi
+    fi
+}
+
+download_ffmpeg() {
+    warn_msg "Do you want download latest version of ffmpeg? [y/Y]"
+    read ans
+    if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+        wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/ffmpeg/zip -O ffmpeg.zip && unzip -o ffmpeg.zip && rm ffmpeg.zip
+        if [[ $? -ne 0 ]]; then
+            error_msg 'downloading latest ffmpeg version is failed...using local binary'
+        else
+            success_msg 'latest version of ffmpeg downloaded and replace with local binary'
+        fi
+    fi
+}
+
+update_dependencies() {
+    warn_msg "Do you want update all dependencies? [y/Y]"
+    read ans
+    if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+        pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+        if [[ $? -ne 0 ]]; then
+            error_msg 'updating dependencies failed'
+        else
+            success_msg 'all dependencies was successfully updated'
+        fi
+    fi
+}
 
 while getopts ":a:v:h" o; do
     case "$o" in
@@ -73,6 +120,7 @@ else
     success_msg 'Python dependecy installed'
 fi
 
+update_dependencies
 clean_build_files
 
 [[ ! (-d './persepolis') ]] && git clone "$git_repo" persepolis && success_msg "$git_repo cloned"
@@ -82,7 +130,9 @@ find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.gui/gui/g' '{
 
 pyinstaller 'persepolis/persepolis/__main__.py' -w -i icon.icns -p persepolis/persepolis -n 'Persepolis Download Manager'
 
+download_aria
 [ -d './dist' ] && cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'aria2c is added to package'
+download_ffmpeg
 [ -d './dist' ] && cp ffmpeg 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'ffmpeg is added to package'
 [ -d './dist' ] && cp Info.plist 'dist/Persepolis Download Manager.app/Contents/'   && success_msg 'Info.plist added to package'
 [ -d './Persepolis Download Manager.app' ] && [ -d './dist' ] && rm -rf 'Persepolis Download Manager.app'

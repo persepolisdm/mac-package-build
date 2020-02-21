@@ -124,7 +124,7 @@ clean_build_files
 find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.scripts/scripts/g' '{}' \;
 find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.gui/gui/g' '{}' \;
 
-pyinstaller 'persepolis/persepolis/__main__.py' -w -i icon.icns -p persepolis/persepolis -n 'Persepolis Download Manager'
+pyinstaller --hidden-import pkg_resources.py2_warn 'persepolis/persepolis/__main__.py' -w -i icon.icns -p persepolis/persepolis -n 'Persepolis Download Manager'
 
 download_aria
 [ -d './dist' ] && cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'aria2c is added to package'

@@ -130,7 +130,7 @@ download_aria
 [ -d './dist' ] && cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'aria2c is added to package'
 download_ffmpeg
 [ -d './dist' ] && cp ffmpeg 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'ffmpeg is added to package'
-[ -d './dist' ] && cp Info.plist 'dist/Persepolis Download Manager.app/Contents/'   && success_msg 'Info.plist added to package'
+# [ -d './dist' ] && cp Info.plist 'dist/Persepolis Download Manager.app/Contents/'   && success_msg 'Info.plist added to package'
 [ -d './Persepolis Download Manager.app' ] && [ -d './dist' ] && rm -rf 'Persepolis Download Manager.app'
 [ -d './dist' ] && mv 'dist/Persepolis Download Manager.app' .  && success_msg 'final package moving to root directory'
 

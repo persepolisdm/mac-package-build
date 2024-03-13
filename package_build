@@ -77,6 +77,20 @@ update_dependencies() {
     fi
 }
 
+check_installed_createdmg() {
+    warn_msg "Do you want install create-dmg with homebrew? [y/Y]"
+    read ans
+    if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+        brew install create-dmg
+        if [[ $? -ne 0 ]]; then
+            error_msg 'installing create-dmg failed'
+        else
+            success_msg 'create-dmg was successfully installed'
+        fi
+    fi
+}
+
+
 while getopts ":a:v:h" o; do
     case "$o" in
         a)
@@ -133,5 +147,7 @@ download_ffmpeg
 # [ -d './dist' ] && cp Info.plist 'dist/Persepolis Download Manager.app/Contents/'   && success_msg 'Info.plist added to package'
 [ -d './Persepolis Download Manager.app' ] && [ -d './dist' ] && rm -rf 'Persepolis Download Manager.app'
 [ -d './dist' ] && mv 'dist/Persepolis Download Manager.app' .  && success_msg 'final package moving to root directory'
+
+check_installed_createdmg
 
 clean_build_files include_spec_file

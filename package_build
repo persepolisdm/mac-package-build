@@ -27,7 +27,7 @@ clean_build_files () {
             rm -rf persepolis
         fi
     fi
-    rm -rf dist build
+    rm -rf dist/dmg dist build
     if [ "$1" = "include_spec_file" ]; then
         warn_msg 'remove .spec file'
         rm 'Persepolis Download Manager.spec'
@@ -90,6 +90,22 @@ check_installed_createdmg() {
     fi
 }
 
+build_dmg_installer(){
+    mkdir -p dist/dmg
+    mv 'Persepolis Download Manager.app' dist/dmg 
+    test -f "dist/Persepolis Download Manager.dmg" && rm "dist/Persepolis Download Manager.dmg"
+    create-dmg \
+        --volname "Persepolis Download Manager" \
+        --volicon "icon.icns" \
+        --window-pos 200 120 \
+        --window-size 600 300 \
+        --icon-size 100 \
+        --icon "Persepolis Download Manager.app" 120 120 \
+        --hide-extension "Persepolis Download Manager.app" \
+        --app-drop-link 425 120 \
+        "Persepolis Download Manager.dmg" \
+        "dist/dmg/"
+}
 
 while getopts ":a:v:h" o; do
     case "$o" in
@@ -149,5 +165,6 @@ download_ffmpeg
 [ -d './dist' ] && mv 'dist/Persepolis Download Manager.app' .  && success_msg 'final package moving to root directory'
 
 check_installed_createdmg
+build_dmg_installer
 
 clean_build_files include_spec_file

@@ -7,6 +7,7 @@ warn_color='\033[1;33m▶︎'
 success_color='\033[1;32m✔︎'
 reset_color='\033[0m'
 default_aria_url='https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2'
+pdm_version='4.0.1'
 
 error_msg() {
     echo -e "$error_color $1$reset_color"; exit 1;
@@ -154,7 +155,9 @@ clean_build_files
 find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.scripts/scripts/g' '{}' \;
 find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.gui/gui/g' '{}' \;
 
-pyinstaller --hidden-import pkg_resources.py2_warn 'persepolis/persepolis/__main__.py' -w -i icon.icns -p persepolis/persepolis -n 'Persepolis Download Manager'
+# pyinstaller --hidden-import pkg_resources.py2_warn 'persepolis/persepolis/__main__.py' -w -i icon.icns -p persepolis/persepolis -n 'Persepolis Download Manager'
+pyinstaller app.spec
+
 
 download_aria
 [ -d './dist' ] && cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'aria2c is added to package'
@@ -167,4 +170,5 @@ download_ffmpeg
 check_installed_createdmg
 build_dmg_installer
 
-clean_build_files include_spec_file
+# clean_build_files include_spec_file
+clean_build_files

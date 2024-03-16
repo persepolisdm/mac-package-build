@@ -43,7 +43,7 @@ download_aria() {
         | egrep '\"browser_download_url\".*osx-darwin\.tar\.bz2\"' \
         | cut -d'"' -f 4) -O - \
         | tar -xj -C $aria_path --strip-components 1 \
-    || wget '$default_aria_url' -O - | tar -xj -C $aria_path --strip-components 1 \
+    || wget $default_aria_url -O - | tar -xj -C $aria_path --strip-components 1 \
     && [ -f ./$aria_path/bin/aria2c ] \
     && cp ./$aria_path/bin/aria2c $packaging_path/ \
     && rm -rf $aria_path

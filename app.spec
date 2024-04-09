@@ -48,4 +48,17 @@ app = BUNDLE(
     icon='icon.icns',
     bundle_identifier=None,
     version='4.0.1',
+    info_plist={
+        'NSPrincipalClass': 'NSApplication',
+        'NSAppleScriptEnabled': False,
+        'NSHighResolutionCapable': True,
+        'CFBundleName': 'Persepolis Download Manager',
+        'CFBundleDisplayName': 'Persepolis Download Manager',
+        'CFBundleExecutable': 'Persepolis Download Manager',
+        'CFBundleIdentifier': 'Persepolis Download Manager',
+        'CFBundleIconFile': 'icon.icns',
+        'CFBundleInfoDictionaryVersion': '6.0',
+        'CFBundlePackageType': 'APPL',
+        'CFBundleShortVersionString': '4.0.1'
+        },
 )

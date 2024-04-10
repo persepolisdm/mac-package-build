@@ -19,5 +19,5 @@ setproctitle==1.3.3
 shiboken6==6.6.2
 urllib3==2.2.1
 websockets==12.0
-yt-dlp==2024.3.10
+yt-dlp==2024.4.9
 zipp==3.18.1

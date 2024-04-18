@@ -146,7 +146,7 @@ if [[ ! (-d "$venv_dir") ]] ; then
     success_msg 'Virtualenv directory created'
 fi
 
-source "./$venv_dir/bin/activate"
+source "./$venv_dir/usr/local/bin/activate"
 pip install -r ./requirements.txt
 if [[ $? -ne 0 ]]; then
     error_msg 'Resolving python dependency failed'

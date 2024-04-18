@@ -9,7 +9,7 @@ mutagen==1.47.0
 packaging==24.0
 psutil==5.9.8
 pycryptodomex==3.20.0
-pyinstaller==6.5.0
+pyinstaller==6.6.0
 pyinstaller-hooks-contrib==2024.3
 PySide6==6.6.2
 PySide6_Addons==6.6.2

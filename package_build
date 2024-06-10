@@ -85,6 +85,24 @@ update_dependencies() {
     fi
 }
 
+check_installed_brew(){
+    which -s brew
+    if [[ $? != 0 ]] ; then
+        warn_msg "Do you want install homebrew for packaging? [y/Y]"
+        read ans
+        if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            if [[ $? -ne 0 ]]; then
+                error_msg 'installing brew failed'
+            else
+                success_msg 'brew was successfully installed'
+            fi
+        fi
+    else
+        success_msg 'brew is installed on your system'
+    fi
+}
+
 check_installed_wget(){
     if brew ls --versions wget > /dev/null; then
         success_msg 'wget is installed on your system'
@@ -176,6 +194,7 @@ else
 fi
 
 update_dependencies
+check_installed_brew
 check_installed_wget
 clean_build_files
 

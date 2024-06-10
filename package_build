@@ -85,6 +85,23 @@ update_dependencies() {
     fi
 }
 
+check_installed_wget(){
+    if brew ls --versions wget > /dev/null; then
+        success_msg 'wget is installed on your system'
+    else
+        warn_msg "Do you want install wget with homebrew? [y/Y]"
+        read ans
+        if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+            brew install wget
+            if [[ $? -ne 0 ]]; then
+                error_msg 'installing wget failed'
+            else
+                success_msg 'wget was successfully installed'
+            fi
+        fi
+    fi
+}
+
 check_installed_createdmg() {
     warn_msg "Do you want install create-dmg with homebrew? [y/Y]"
     read ans
@@ -155,6 +172,7 @@ else
 fi
 
 update_dependencies
+check_installed_wget
 clean_build_files
 
 [[ ! (-d './persepolis') ]] && git clone "$git_repo" persepolis && success_msg "$git_repo cloned"

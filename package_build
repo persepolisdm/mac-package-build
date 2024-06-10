@@ -103,14 +103,18 @@ check_installed_wget(){
 }
 
 check_installed_createdmg() {
-    warn_msg "Do you want install create-dmg with homebrew? [y/Y]"
-    read ans
-    if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
-        brew install create-dmg
-        if [[ $? -ne 0 ]]; then
-            error_msg 'installing create-dmg failed'
-        else
-            success_msg 'create-dmg was successfully installed'
+    if brew ls --versions create-dmg > /dev/null; then
+        success_msg 'create-dmg is installed on your system'
+    else
+        warn_msg "Do you want install create-dmg with homebrew? [y/Y]"
+        read ans
+        if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+            brew install create-dmg
+            if [[ $? -ne 0 ]]; then
+                error_msg 'installing create-dmg failed'
+            else
+                success_msg 'create-dmg was successfully installed'
+            fi
         fi
     fi
 }

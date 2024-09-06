@@ -10,9 +10,9 @@ mac package build codes for Persepolis Download Manager
 - you should have Persepolis Download Manager dependecies installed at first! It is recommended to use brew to install dependecies.
   At first place, you need to have latest xCode installed! then install `git` , `python3`, `virtualenv`.
   The minimum version of Python to run Persepolis, should be between 3.9 and 3.12.
-- Activate the environment and install the latest version of packages `pyside6`, `yt-dlp`, `psutil`, `requests`
+- Activate the environment and install the latest version of packages `pyside6`, `yt-dlp`, `psutil`, `requests`, `urllib3`
 - Now change directory to cloned folder and run builder script, This script is a smart package maker. It downloads the prerequisites and installs the tools that are not installed for you.
-- Persepolis needs binanry `aria2`, `sthp`, `ffmpeg` for proper execution, which the script downloads and places next to the final file.
+- Persepolis needs binanry `ffmpeg` for proper execution, which the script downloads and places next to the final file.
 - To package the final file, the script uses `create-dmg`, and if it is not installed, the script will install it for you from homebrew.
 
 - run `./package_build` file in this repository. then you can see `Persepolis Download Manager.dmg` in current directory!

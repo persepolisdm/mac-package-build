@@ -1,6 +1,6 @@
 altgraph==0.17.4
 Brotli==1.1.0
-certifi==2024.7.4
+certifi==2024.2.2
 charset-normalizer==3.3.2
 idna==3.7
 importlib_metadata==7.0.2
@@ -8,7 +8,9 @@ macholib==1.16.3
 mutagen==1.47.0
 packaging==24.0
 psutil==5.9.8
+pycairo @ file:///private/tmp/py3cairo-20230929-6731-1s993lx/pycairo-1.25.0
 pycryptodomex==3.20.0
+PyGObject==3.46.0
 pyinstaller==6.6.0
 pyinstaller-hooks-contrib==2024.3
 PySide6==6.6.2
@@ -17,7 +19,7 @@ PySide6_Essentials==6.6.2
 requests==2.32.0
 setproctitle==1.3.3
 shiboken6==6.6.2
-urllib3==2.2.2
+urllib3==2.2.1
 websockets==12.0
-yt-dlp==2024.7.7
-zipp==3.19.1
+yt-dlp==2024.4.9
+zipp==3.18.1

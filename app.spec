@@ -47,7 +47,7 @@ app = BUNDLE(
     name='Persepolis Download Manager.app',
     icon='icon.icns',
     bundle_identifier=None,
-    version='4.1.0',
+    version='5.0.0',
     info_plist={
         'NSPrincipalClass': 'NSApplication',
         'NSAppleScriptEnabled': False,
@@ -59,6 +59,6 @@ app = BUNDLE(
         'CFBundleIconFile': 'icon.icns',
         'CFBundleInfoDictionaryVersion': '6.0',
         'CFBundlePackageType': 'APPL',
-        'CFBundleShortVersionString': '4.1.0'
+        'CFBundleShortVersionString': '5.0.0'
         },
 )

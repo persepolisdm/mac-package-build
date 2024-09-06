@@ -6,8 +6,6 @@ error_color='\033[1;31m✗'
 warn_color='\033[1;33m▶︎'
 success_color='\033[1;32m✔︎'
 reset_color='\033[0m'
-default_aria_url='https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-osx-darwin.tar.bz2'
-default_sthp_url='https://github.com/KaranGauswami/socks-to-http-proxy/releases/download/v0.4.0/sthp-macos'
 
 error_msg() {
     echo -e "$error_color $1$reset_color"; exit 1;
@@ -35,33 +33,6 @@ clean_build_files () {
     fi
 }
 
-download_sthp() {
-    warn_msg "downloading sthp..."
-    wget $default_sthp_url
-    mv sthp-macos sthp
-    chmod +x sthp
-    if [[ $? -ne 0 ]]; then
-        error_msg 'downloading sthp is failed, check connection.'
-    else
-        success_msg 'sthp downloaded'
-    fi
-}
-
-download_aria() {
-    warn_msg "downloading aria2c..."
-    aria_path='temp_aria_dic'
-    mkdir $aria_path \
-    && wget $default_aria_url -O - | tar -xj -C $aria_path --strip-components 1 \
-    && [ -f ./$aria_path/bin/aria2c ] \
-    && cp ./$aria_path/bin/aria2c $packaging_path/ \
-    && rm -rf $aria_path
-    if [[ $? -ne 0 ]]; then
-        error_msg 'downloading aria2 is failed, check connection.'
-    else
-        success_msg 'aria2 downloaded'
-    fi
-}
-
 download_ffmpeg() {
     warn_msg "downloading ffmpeg"
     wget --trust-server-names https://evermeet.cx/ffmpeg/getrelease/ffmpeg/zip -O ffmpeg.zip && unzip -o ffmpeg.zip && rm ffmpeg.zip
@@ -85,15 +56,54 @@ update_dependencies() {
     fi
 }
 
+check_installed_brew(){
+    which -s brew
+    if [[ $? != 0 ]] ; then
+        warn_msg "Do you want install homebrew for packaging? [y/Y]"
+        read ans
+        if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            if [[ $? -ne 0 ]]; then
+                error_msg 'installing brew failed'
+            else
+                success_msg 'brew was successfully installed'
+            fi
+        fi
+    else
+        success_msg 'brew is installed on your system'
+    fi
+}
+
+check_installed_wget(){
+    if brew ls --versions wget > /dev/null; then
+        success_msg 'wget is installed on your system'
+    else
+        warn_msg "Do you want install wget with homebrew? [y/Y]"
+        read ans
+        if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+            brew install wget
+            if [[ $? -ne 0 ]]; then
+                error_msg 'installing wget failed'
+            else
+                success_msg 'wget was successfully installed'
+            fi
+        fi
+    fi
+}
+
 check_installed_createdmg() {
-    warn_msg "Do you want install create-dmg with homebrew? [y/Y]"
-    read ans
-    if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
-        brew install create-dmg
-        if [[ $? -ne 0 ]]; then
-            error_msg 'installing create-dmg failed'
-        else
-            success_msg 'create-dmg was successfully installed'
+    if brew ls --versions create-dmg > /dev/null; then
+        success_msg 'create-dmg is installed on your system'
+    else
+        warn_msg "Do you want install create-dmg with homebrew? [y/Y]"
+        read ans
+        if [[ ($ans == 'y') || ($ans == 'Y') ]]; then
+            brew install create-dmg
+            if [[ $? -ne 0 ]]; then
+                error_msg 'installing create-dmg failed'
+            else
+                success_msg 'create-dmg was successfully installed'
+            fi
         fi
     fi
 }
@@ -155,6 +165,8 @@ else
 fi
 
 update_dependencies
+check_installed_brew
+check_installed_wget
 clean_build_files
 
 [[ ! (-d './persepolis') ]] && git clone "$git_repo" persepolis && success_msg "$git_repo cloned"
@@ -164,10 +176,6 @@ find persepolis/persepolis -type f -exec perl -i -pe 's/persepolis.gui/gui/g' '{
 
 pyinstaller app.spec
 
-download_sthp
-[ -d './dist' ] && cp sthp 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'sthp is added to package'
-download_aria
-[ -d './dist' ] && cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'aria2c is added to package'
 download_ffmpeg
 [ -d './dist' ] && cp ffmpeg 'dist/Persepolis Download Manager.app/Contents/MacOS/' && success_msg 'ffmpeg is added to package'
 [ -d './Persepolis Download Manager.app' ] && [ -d './dist' ] && rm -rf 'Persepolis Download Manager.app'
@@ -175,5 +183,4 @@ download_ffmpeg
 
 check_installed_createdmg
 build_dmg_installer
-
 clean_build_files
